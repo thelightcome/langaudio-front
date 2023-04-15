@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.scrollbar-sweet {
+  scrollbar-width: thin;
+  scrollbar-color: var(--secondary) var(--primary);
+}
+
+.scrollbar-sweet::-webkit-scrollbar {
+  width: 2px;
+}
+
+.scrollbar-sweet::-webkit-scrollbar-track {
+  background-color: transparent;
+  border-radius: 2px;
+}
+
+.scrollbar-sweet::-webkit-scrollbar-thumb {
+  @apply bg-color-1;
+}
+
+.main-links.router-link-exact-active {
+  @apply text-color-1;
+}

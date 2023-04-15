@@ -1,0 +1,11 @@
+{
+  "hello": "hello",
+  "auth": {
+    "titles": {
+      "signin": "Sign in",
+      "signup": "Sign up",
+      "refresh": "Refresh",
+      "verify": "Verify"
+    }
+  }
+}

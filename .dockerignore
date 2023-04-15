@@ -1,0 +1,14 @@
+.nuxt
+.output
+android
+BASKET
+ios
+node_modules
+.env
+.gitignore
+capacitor.config.ts
+ionic.config.json
+*.log*
+.nitro
+.cache
+dist
