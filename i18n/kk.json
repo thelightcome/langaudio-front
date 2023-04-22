@@ -1,0 +1,16 @@
+{
+  "hello": "Сәлем",
+  "auth": {
+    "titles": {
+      "signin": "Sign in",
+      "signup": "Sign up",
+      "refresh": "Refresh",
+      "verify": "Verify"
+    }
+  },
+  "messages": {
+    "VERIFY_YOUT_EMAIL": "VERIFY_YOUT_EMAIL",
+    "LINK_FOR_PASSWORD_CHANGE_SENDED": "LINK_FOR_PASSWORD_CHANGE_SENDED",
+    "PASSWORD_WAS_CHANGED": "PASSWORD_WAS_CHANGED"
+  }
+}

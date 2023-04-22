@@ -1,0 +1,49 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "start": "node .output/server/index.mjs",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "lint:js": "eslint --ext \".ts,.vue\" --ignore-path .gitignore .",
+    "lint:prettier": "prettier --check .",
+    "lint": "npm run lint:js && npm run lint:prettier",
+    "lintfix": "prettier --write --list-different . && npm run lint:js --fix",
+    "ionic:build": "npm run build",
+    "ionic:serve": "npm run dev"
+  },
+  "devDependencies": {
+    "@nuxt/image-edge": "^1.0.0-27952794.567c688",
+    "@nuxtjs/eslint-config-typescript": "^12.0.0",
+    "@nuxtjs/i18n": "^8.0.0-beta.9",
+    "@nuxtjs/tailwindcss": "^6.4.0",
+    "@typescript-eslint/parser": "^5.57.1",
+    "@vite-pwa/nuxt": "^0.0.7",
+    "eslint": "^8.38.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "nuxt": "^3.2.0",
+    "prettier": "^2.8.7",
+    "sass": "^1.58.3",
+    "typescript": "^5.0.4",
+    "vite-svg-loader": "^4.0.0"
+  },
+  "dependencies": {
+    "@capacitor/android": "4.7.3",
+    "@capacitor/app": "4.1.1",
+    "@capacitor/cli": "4.7.3",
+    "@capacitor/core": "4.7.3",
+    "@capacitor/haptics": "4.1.0",
+    "@capacitor/ios": "4.7.3",
+    "@capacitor/keyboard": "4.1.1",
+    "@capacitor/status-bar": "4.1.1",
+    "@pinia/nuxt": "^0.4.6",
+    "click-outside-vue3": "^4.0.1",
+    "ohmyfetch": "^0.4.21",
+    "pinia": "^2.0.30"
+  },
+  "name": "my-app",
+  "version": "0.0.0"
+}
