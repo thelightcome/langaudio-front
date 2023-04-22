@@ -10,7 +10,9 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       baseURL: "/api",
+      apiBaseUrl: process.env.API_URL,
     },
+    apiBaseUrl: process.env.API_URL,
   },
   modules: [
     "@nuxtjs/tailwindcss",
@@ -47,13 +49,8 @@ export default defineNuxtConfig({
       },
     },
   },
-  server: {
-    proxy: {
-      "/api": {
-        target: process.env.API_URL,
-        changeOrigin: true,
-      },
-    },
+  devServer: {
+    host: "0.0.0.0",
+    port: 3000,
   },
-  image: {},
 });

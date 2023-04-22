@@ -6,7 +6,7 @@ export function useApiHook() {
   const { $auth, $config } = useNuxtApp();
 
   const fetchOptions: FetchOptions = {
-    baseURL: $config.baseURL,
+    baseURL: $config.apiBaseUrl,
     onRequest({ options }) {
       options.headers = {
         ...(options.headers ? options.headers : {}),
