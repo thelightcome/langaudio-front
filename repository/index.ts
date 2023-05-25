@@ -9,6 +9,7 @@ import SourceModule from "./modules/source";
 import TranslateModule from "./modules/translates";
 import RolesModule from "./modules/roles";
 import UsersModule from "./modules/users";
+import GoogleApi from "./modules/google-api";
 
 export interface IApiInstance {
   auth: AuthModule;
@@ -20,6 +21,7 @@ export interface IApiInstance {
   translate: TranslateModule;
   roles: RolesModule;
   users: UsersModule;
+  googleApi: GoogleApi;
 }
 
 export type IApiKeys = keyof IApiInstance;
@@ -35,5 +37,6 @@ export default function (apiFetcher: $Fetch): IApiInstance {
     translate: new TranslateModule(apiFetcher),
     roles: new RolesModule(apiFetcher),
     users: new UsersModule(apiFetcher),
+    googleApi: new GoogleApi(apiFetcher),
   };
 }

@@ -1,15 +1,16 @@
 <template>
-  <NuxtLink
+  <a
     v-if="pathExist"
-    :to="'/' + routeParse"
     class="block cursor-pointer text-dark-font mb-6"
+    @click.prevent="$router.go(-1)"
   >
     {{ "<--  " + (routeParse ? "/" : "") + (routeParse || "Main") }}
-  </NuxtLink>
+  </a>
 </template>
 
 <script lang="ts" setup>
 const $route = useRoute();
+const $router = useRouter();
 
 const routeParse = computed(() => {
   let arr = $route.path.split("/");

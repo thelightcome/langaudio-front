@@ -20,3 +20,15 @@ export interface ISearchTranslate {
   limit: number;
   include?: string[];
 }
+
+export interface ITranslateData {
+  id: number;
+  name: string;
+  text: string;
+  authorId: string;
+  langCode: string;
+  sourceId: number;
+  raiting: number;
+  createdAt: string;
+  updatedAt: string;
+}

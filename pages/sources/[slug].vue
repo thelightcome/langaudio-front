@@ -2,9 +2,22 @@
   <div
     class="pt-10 flex flex-col-reverse md:flex-row justify-between items-start gap-4 flex-wrap"
   >
+    <div
+      v-if="translateOpt"
+      class="fixed top-0 left-0 right-0 bottom-0 z-10"
+      @click="translateOpt = null"
+    >
+      <div
+        :style="{ left: translateOpt.x + 'px', top: translateOpt.y + 'px' }"
+        class="absolute p-2 border-0 bg-blue-100 text-dark-700 transform translate-y-[10px]"
+        @click.prevent=""
+      >
+        {{ translateOpt.text }}
+      </div>
+    </div>
     <UiBackSlash />
     <template v-if="source">
-      <div class="w-full md:basis-[50%]">
+      <div class="w-full md:basis-[45%]">
         <div class="border border-light-300 py-3 px-5 mb-4 w-full">
           <UiText class="mb-2">Settings</UiText>
           <div class="flex items-end mb-3">
@@ -30,13 +43,6 @@
               >
                 By sentence
               </button>
-              <button
-                class="text-dark-font px-2 py-1 border-none rounded-sm duration-300 hover:bg-gray-200/10"
-                :class="{ 'text-red-500 bg-gray-200/10': splitChar === '-' }"
-                @click="splitChar = '-'"
-              >
-                Show row
-              </button>
             </div>
           </div>
           <div class="flex items-end gap-2">
@@ -55,16 +61,35 @@
             >
           </div>
         </div>
-        <div>
-          <div class="flex justify-between items-center md:pr-[10%] mb-4">
-            <UiText level="h5"
-              >{{ source.implementors[0].name }} - {{ source.name }}</UiText
-            >
-            <UiButton type="text" class="ml-3" @click="addToPlaylist"
-              >Add To Playlist</UiButton
-            >
+        <UiButton type="text" class="mb-3" @click="addToPlaylist"
+          >Add To Playlist</UiButton
+        >
+        <div class="flex gap-5">
+          <div>
+            <div class="flex justify-between items-center md:pr-[10%] mb-4">
+              <UiText level="h5"
+                >{{ source.implementors[0].name }} - {{ source.name }}</UiText
+              >
+            </div>
+            <div class="flex gap-2">
+              <UiText @dblclick="clickText"
+                ><div style="white-space: pre-line" v-html="sourceText"></div
+              ></UiText>
+            </div>
           </div>
-          <UiText @click="clickText"><div v-html="sourceText"></div></UiText>
+          <div v-if="selectedTranslate">
+            <div class="flex justify-between items-center md:pr-[10%] mb-4">
+              <UiText level="h5">{{ selectedTranslate.name }}</UiText>
+            </div>
+            <div class="flex gap-2">
+              <UiText
+                ><div
+                  style="white-space: pre-line"
+                  v-html="selectedTranslate.text"
+                ></div
+              ></UiText>
+            </div>
+          </div>
         </div>
       </div>
       <div class="grow border border-light-300 py-3 px-5 w-full md:max-w-[45%]">
@@ -128,16 +153,25 @@ import IconYoutube from "~/assets/icons/youtube.svg?component";
 import IconHeadphones from "~/assets/icons/headphones.svg?component";
 import IconVideoCamera from "~/assets/icons/video-camera.svg?component";
 
+import { ITranslateData } from "~/types/translates.types";
 import { ILanguage } from "~/types/languages.types";
 import { ISource } from "~/types/sources.types";
 
 import { useSourcesStore } from "~/store/sources";
 import { useModalStore } from "~/store/modal";
 
+export interface ITransltaOpt {
+  x: number;
+  y: number;
+  text: string;
+}
+
 const localePath = useLocalePath();
+const $api = useApiHook();
 const route = useRoute();
 const sourcesStore = useSourcesStore();
 const modalStore = useModalStore();
+const { locale } = useI18n();
 
 const source: ComputedRef<ISource | undefined> = computed(() => {
   return sourcesStore.sources.find(
@@ -146,30 +180,43 @@ const source: ComputedRef<ISource | undefined> = computed(() => {
 });
 
 const sourceText: ComputedRef<string> = computed(() => {
-  return source.value ? source.value.text.replaceAll("\n", "<br />") : "";
+  return source.value
+    ? source.value.text.split("\n").reduce((acc, el) => {
+        const sum = el.split(" ").reduce((acc, el) => {
+          acc += `<span>${el} </span>`;
+          return acc;
+        }, "");
+        acc += `<p>${sum}</p>`;
+        return acc;
+      }, "")
+    : "";
 });
 
 const selectedLang = ref<ILanguage | null>(null);
 const curPlayerType = ref("youtube");
 const splitChar = ref(" ");
-const selectedTranslate = ref(null);
+const selectedTranslate = ref<ITranslateData | null>(null);
+const translateOpt = ref<ITransltaOpt | null>(null);
 
 function addToPlaylist() {
   modalStore._openModal("MainPlayListModal", source.value);
 }
 
-function clickText() {
-  if (!source.value) return;
-  if (splitChar.value === "-") return;
-  const s = window.getSelection();
-  if (s?.anchorOffset) {
-    const splitter = splitChar.value === "\n" ? "\n" : /\s/;
-    const fp = source.value.text.slice(0, s?.anchorOffset);
-    const first = fp.split(splitter).pop();
-    const sp = source.value.text.slice(s?.anchorOffset);
-    const last = sp.split(splitter).shift();
-    const ext = (first || "") + (last || "");
-    console.log(ext);
-  }
+async function clickText(e: any) {
+  if (!sourceText.value) return;
+  const tag = splitChar.value === "\n" ? "p" : "span";
+  const elem = e.target.closest(tag);
+  const text = elem.textContent;
+
+  const translate = await $api.googleApi.translate({
+    text,
+    langCode: selectedLang.value?.code || locale.value,
+  });
+
+  translateOpt.value = {
+    x: e.clientX,
+    y: e.clientY,
+    text: translate || "No translation",
+  };
 }
 </script>
