@@ -34,19 +34,6 @@
           @blur="check('text')"
         />
         <div class="grow basis-80">
-          <div class="flex justify-between items-stretch">
-            <UiButton @click="tabType = 'image'">Image</UiButton>
-            <UiButton @click="tabType = 'youtube'">YouTube</UiButton>
-            <UiButton @click="tabType = 'audio'">Audio</UiButton>
-            <UiButton @click="tabType = 'video'">Video</UiButton>
-          </div>
-          <UiVideo
-            v-show="tabType === 'audio'"
-            :video="false"
-            :src="audioFileSrc"
-            :width="'400px'"
-            :height="'70px'"
-          />
           <iframe
             v-show="tabType === 'youtube' && values.srcYoutube"
             type="text/html"
@@ -55,18 +42,6 @@
             :src="values.srcYoutube.value"
             frameborder="0"
           ></iframe>
-          <UiVideo
-            v-show="tabType === 'video'"
-            :src="videoFileSrc"
-            :width="'400px'"
-            :height="'300px'"
-          />
-          <NuxtImg
-            v-show="tabType === 'image'"
-            class="w-full h-full object-contain"
-            :src="imgFileSrc || 'sdfs'"
-            alt=""
-          />
         </div>
       </div>
     </form>
@@ -103,9 +78,6 @@ const selectedSource = computed(() => {
   return sourceStore._getSources.find((e) => e.id === +route.params.id);
 });
 
-const audioFileSrc = ref("");
-const videoFileSrc = ref("");
-const imgFileSrc = ref("");
 const { values, errors, isValid, check, handleSubmit } = useFormHook({
   name: { init: "", required: true, min: 1 },
   lang: { init: "", required: true },
@@ -117,9 +89,6 @@ const { values, errors, isValid, check, handleSubmit } = useFormHook({
 
 onMounted(() => {
   if (!selectedSource.value) return;
-  audioFileSrc.value = selectedSource.value.srcAudio;
-  videoFileSrc.value = selectedSource.value.srcVideo;
-  imgFileSrc.value = selectedSource.value.img;
   values.name.value = selectedSource.value.name;
   values.lang.value = selectedSource.value.lang;
   values.implementor.value = selectedSource.value.implementors[0].name;

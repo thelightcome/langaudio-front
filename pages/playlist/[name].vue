@@ -6,36 +6,9 @@
         v-if="curSource"
         class="grow border border-light-300 py-3 px-5 w-full md:max-w-[45%]"
       >
-        <div class="flex items-stretch mb-5 gap-3">
-          <button
-            v-if="curSource.srcYoutube"
-            class="flex justify-center items-center w-8 h-8 border-none cursor-pointer rounded-xl duration-300 p-2 hover:bg-gray-200/20"
-            :class="{ 'bg-gray-200/20': curPlayerType === 'youtube' }"
-            @click="curPlayerType = 'youtube'"
-          >
-            <IconYoutube class="fill-red-500" />
-          </button>
-          <button
-            v-if="curSource.srcAudio"
-            class="flex justify-center items-center w-8 h-8 border-none cursor-pointer rounded-xl duration-300 p-2 hover:bg-gray-200/20"
-            :class="{ 'bg-gray-200/20': curPlayerType === 'audio' }"
-            @click="curPlayerType = 'audio'"
-          >
-            <IconHeadphones class="fill-pink-600" />
-          </button>
-          <button
-            v-if="curSource.srcVideo"
-            class="flex justify-center items-center w-8 h-8 border-none cursor-pointer rounded-xl duration-300 p-2 hover:bg-gray-200/20"
-            :class="{ 'bg-gray-200/20': curPlayerType === 'video' }"
-            @click="curPlayerType = 'video'"
-          >
-            <IconVideoCamera class="fill-fuchsia-700" />
-          </button>
-        </div>
         <div class="w-full">
           <iframe
             v-if="curSource.srcYoutube"
-            v-show="curPlayerType === 'youtube'"
             type="text/html"
             width="400"
             height="300"
@@ -43,18 +16,6 @@
             frameborder="0"
             class="w-full"
           ></iframe>
-          <UiVideo
-            v-if="curSource.srcAudio"
-            v-show="curPlayerType === 'audio'"
-            :src="curSource.srcAudio"
-            :video="false"
-          />
-          <UiVideo
-            v-if="curSource.srcVideo"
-            v-show="curPlayerType === 'video'"
-            :src="curSource.srcVideo"
-            class="w-full"
-          />
         </div>
       </div>
       <div
@@ -145,10 +106,6 @@
 </template>
 
 <script lang="ts" setup>
-import IconYoutube from "~/assets/icons/youtube.svg?component";
-import IconHeadphones from "~/assets/icons/headphones.svg?component";
-import IconVideoCamera from "~/assets/icons/video-camera.svg?component";
-
 import { ILanguage } from "~/types/languages.types";
 import { ISource } from "~/types/sources.types";
 
@@ -168,7 +125,6 @@ const sources = reactive<{ list: ISource[] }>({
 });
 const curSource = ref<null | ISource>(null);
 const selectedLang = ref<ILanguage | null>(null);
-const curPlayerType = ref("youtube");
 const splitChar = ref(" ");
 const selectedTranslate = ref(null);
 

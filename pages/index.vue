@@ -17,7 +17,11 @@
           :to="localePath('/sources/' + item.id)"
           class="flex flex-col md:flex-row gap-4 justify-start items-stretch border border-dark-font px-4 py-2 rounded-sm duration-300 hover:bg-gray-300/10"
         >
-          <NuxtImg v-if="item.img" :src="item.img" class="max-w-[250px]" />
+          <NuxtImg
+            v-if="item.srcYoutube"
+            :src="item.srcYoutube"
+            class="max-w-[250px]"
+          />
           <div>
             <UiText>{{ item.implementors[0].name + " - " + item.name }}</UiText>
             <UiText>{{ item.text.slice(0, 400) }}</UiText>

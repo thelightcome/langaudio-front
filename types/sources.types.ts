@@ -3,14 +3,11 @@ import { IImplementor, IImplementorCreate } from "~/types/implementors.types";
 
 export interface ISource {
   id: number;
-  img: string;
   isVerified: boolean;
   langCode: string;
   lang: ILanguage;
   name: string;
   raiting: number;
-  srcAudio: string;
-  srcVideo: string;
   srcYoutube: string;
   text: string;
   implementors: IImplementor[];

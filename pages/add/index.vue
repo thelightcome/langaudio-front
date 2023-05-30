@@ -64,43 +64,6 @@
             class="mb-4"
             @blur="check('srcYoutube')"
           />
-          <UiPlayer
-            width="400px"
-            height="60px"
-            :video="false"
-            @change="audioFile = $event"
-          >
-            <template #title> Add Audio </template>
-          </UiPlayer>
-        </div>
-        <div class="w-full border border-light-300 p-4">
-          <div class="flex justify-start items-stretch gap-4 mb-2">
-            <UiButton
-              :class="{ underline: tabType === 'image' }"
-              type="text"
-              @click="tabType = 'image'"
-              >Image</UiButton
-            >
-            <UiButton
-              :class="{ underline: tabType === 'video' }"
-              type="text"
-              @click="tabType = 'video'"
-              >Video</UiButton
-            >
-          </div>
-          <UiPlayer
-            v-show="tabType === 'video'"
-            width="400px"
-            height="300px"
-            @change="videoFile = $event"
-          >
-            <template #title> Add Video </template>
-          </UiPlayer>
-          <UiImageLoad
-            v-show="tabType === 'image'"
-            class="max-w-[300px]"
-            @change="imgFile = $event"
-          />
         </div>
       </div>
     </form>
@@ -128,8 +91,6 @@ const { t: $tc } = useI18n();
 const modalStore = useModalStore();
 const $api = useApiHook();
 
-const tabType = ref("image");
-
 const { values, errors, isValid, check, handleSubmit, clear } = useFormHook({
   name: { init: "", required: true, min: 1 },
   lang: { init: "", required: true },
@@ -140,9 +101,6 @@ const { values, errors, isValid, check, handleSubmit, clear } = useFormHook({
 });
 
 const parseYoutubeUrl = ref("");
-const audioFile = ref<null | File>(null);
-const videoFile = ref<null | File>();
-const imgFile = ref<null | File>();
 
 watch(
   () => values.srcYoutube.value,
@@ -165,9 +123,6 @@ watch(
 function clearAll() {
   clear();
   parseYoutubeUrl.value = "";
-  audioFile.value = null;
-  videoFile.value = null;
-  imgFile.value = null;
 }
 
 const { loading, error, request } = useRequestHook(async (data: any) => {
@@ -183,9 +138,6 @@ const { loading, error, request } = useRequestHook(async (data: any) => {
   );
   formData.append("text", data.text.value);
   formData.append("srcYoutube", parseYoutubeUrl.value);
-  if (imgFile.value) formData.append("img", imgFile.value);
-  if (audioFile.value) formData.append("srcAudio", audioFile.value);
-  if (videoFile.value) formData.append("srcVideo", videoFile.value);
 
   {
     const data = await $api.source.create(formData);

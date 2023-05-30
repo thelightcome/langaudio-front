@@ -35,7 +35,7 @@
             :src="
               (playlist.sources &&
                 playlist.sources.length &&
-                playlist.sources[0].img) ||
+                playlist.sources[0].srcYoutube) ||
               'sdvsdvsv'
             "
             class="w-full"
