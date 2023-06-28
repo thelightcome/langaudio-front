@@ -1,11 +1,13 @@
 <template>
   <div
-    class="fixed w-full h-full overflow-hidden flex flex-col justify-start bg-bg-main"
+    class="fixed w-full h-full overflow-hidden flex flex-col justify-start bg-black"
   >
     <MainHeader />
-    <div class="grow overflow-auto scrollbar-sweet">
-      <MainContainer class="min-h-full">
-        <slot></slot>
+    <div
+      class="grow overflow-auto scrollbar-sweet flex flex-col justify-start items-stretch"
+    >
+      <MainContainer class="grow w-full">
+        <NuxtPage />
       </MainContainer>
     </div>
 

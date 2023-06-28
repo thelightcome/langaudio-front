@@ -1,8 +1,8 @@
 <template>
   <div class="pt-4">
-    <UiBackSlash />
+    <UiBackSlash :path="$localePath('/admin')" />
     <div class="relative mb-5">
-      <p class="mb-4 text-dark-font">Form Add Languages</p>
+      <p class="mb-4 text-light">Form Add Languages</p>
       <form class="flex items-center gap-4" @submit.prevent="">
         <UiInputField
           v-if="values.name"
@@ -13,12 +13,12 @@
           @blur="check('name')"
         />
         <UiInputField
-          v-if="values.code"
-          v-model="values.code.value"
+          v-if="values.codeiso"
+          v-model="values.codeiso.value"
           :name="'Languages Code'"
           :type="'text'"
-          :error="errors.code.value"
-          @blur="check('code')"
+          :error="errors.codeiso.value"
+          @blur="check('codeiso')"
         />
         <UiButton
           :disabled="loading || !isValid"
@@ -28,7 +28,10 @@
         <UiButton
           :disabled="loadingUpdate"
           @click="
-            requestUpdate({ name: values.name.value, code: values.code.value })
+            requestUpdate({
+              name: values.name.value,
+              codeiso: values.codeiso.value,
+            })
           "
           >Update</UiButton
         >
@@ -41,12 +44,12 @@
         :key="language.name"
         class="flex flex-row justify-between items-center"
       >
-        <p class="text-dark-font">{{ language.name }}</p>
+        <p class="text-light">{{ language.name }}</p>
         <div class="flex flex-row">
           <UiButton @click="selectCurrent(language)">Select</UiButton>
           <UiButton
             :disabled="loadingDelete"
-            @click="requestDelete(language.code)"
+            @click="requestDelete(language.id)"
             >Delete</UiButton
           >
         </div>
@@ -61,19 +64,20 @@ import { useLanguageStore } from "~/store/languages";
 import { ILanguage } from "~/types/languages.types";
 
 const $api = useApiHook();
+const $localePath = useLocalePath();
 const languageStore = useLanguageStore();
 onMounted(async () => {
   await languageStore._fetchLanguages();
 });
 
 const { values, errors, isValid, check, handleSubmit, clear } = useFormHook({
-  code: { required: true },
+  codeiso: { required: true },
   name: { required: true },
 });
 
 const { loading, error, request } = useRequestHook(async (data: any) => {
   const sendData = {
-    code: data.code.value.toLowerCase(),
+    codeiso: data.codeiso.value.toLowerCase(),
     name: data.name.value.toLowerCase(),
   };
   await $api.langs.create(sendData);
@@ -81,26 +85,26 @@ const { loading, error, request } = useRequestHook(async (data: any) => {
   await languageStore._fetchLanguages();
 });
 
-const selectedLanguage = ref("");
+const selectedLanguage = ref<number | null>(null);
 
 function selectCurrent(selected: ILanguage) {
   values.name.value = selected.name;
-  values.code.value = selected.code;
-  selectedLanguage.value = selected.code;
+  values.codeiso.value = selected.codeiso;
+  selectedLanguage.value = selected.id;
 }
 
 const { loading: loadingUpdate, request: requestUpdate } = useRequestHook(
   async (lang: ILanguage) => {
     if (!selectedLanguage.value) return;
     await $api.langs.update(selectedLanguage.value, lang);
-    selectedLanguage.value = "";
+    selectedLanguage.value = null;
     await languageStore._fetchLanguages();
   }
 );
 
 const { loading: loadingDelete, request: requestDelete } = useRequestHook(
-  async (code: string) => {
-    await $api.langs.delete(code);
+  async (id: number) => {
+    await $api.langs.delete(id);
     await languageStore._fetchLanguages();
   }
 );

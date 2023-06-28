@@ -1,4 +1,10 @@
+export interface ILanguageCreate {
+  codeiso: string;
+  name: string;
+}
+
 export interface ILanguage {
-  code: string;
+  id: number;
+  codeiso: string;
   name: string;
 }

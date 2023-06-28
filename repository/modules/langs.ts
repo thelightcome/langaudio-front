@@ -1,28 +1,24 @@
 import HttpFactory from "../factory";
 
-import { ILanguage } from "~/types/languages.types";
+import { ILanguage, ILanguageCreate } from "~/types/languages.types";
 
 class LangsModule extends HttpFactory {
   private RESOURCE = "/langs";
 
-  async create(body: ILanguage): Promise<any> {
+  async create(body: ILanguageCreate): Promise<any> {
     return await this.POST(`${this.RESOURCE}`, body);
   }
 
-  async update(code: string, body: ILanguage): Promise<any> {
-    return await this.PATCH(`${this.RESOURCE}/${code}`, body);
+  async update(id: number, body: ILanguage): Promise<any> {
+    return await this.PATCH(`${this.RESOURCE}/${id}`, body);
   }
 
-  async delete(code: string): Promise<any> {
-    return await this.DELETE(`${this.RESOURCE}/${code}`);
+  async delete(id: number): Promise<any> {
+    return await this.DELETE(`${this.RESOURCE}/${id}`);
   }
 
   async findAll(): Promise<any> {
     return await this.GET(`${this.RESOURCE}`);
-  }
-
-  async findAllWithSources(): Promise<any> {
-    return await this.GET(`${this.RESOURCE}/with-source`);
   }
 }
 

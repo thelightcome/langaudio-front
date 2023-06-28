@@ -2,7 +2,7 @@
   <main class="h-full flex justify-start items-stretch">
     <AdminMenu class="w-[300px]" />
     <div class="grow">
-      <NuxtPage />
+      <slot></slot>
     </div>
   </main>
 </template>

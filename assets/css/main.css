@@ -17,9 +17,17 @@
 }
 
 .scrollbar-sweet::-webkit-scrollbar-thumb {
-  @apply bg-color-1;
+  @apply bg-primary;
 }
 
 .main-links.router-link-exact-active {
-  @apply text-color-1;
+  @apply text-primary;
+}
+
+.glass {
+  @apply bg-gradient_1;
+
+  opacity: 0.4;
+  -webkit-backdrop-filter: blur(1px);
+  backdrop-filter: blur(1px);
 }

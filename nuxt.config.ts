@@ -7,13 +7,26 @@ import pwaIcons from "./public/icon-logos/icons.json";
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   ssr: false,
+  // app: {
+  //   head: {
+  //     script: [{ src: "https://www.youtube.com/iframe_api" }],
+  //   },
+  // },
   runtimeConfig: {
     public: {
-      baseURL: "/api",
-      apiBaseUrl: process.env.API_URL,
+      baseURL: "/api/",
+      apiBaseUrl:
+        process.env.NODE_ENV === "production" ? process.env.API_URL : "/api/",
     },
-    apiBaseUrl: process.env.API_URL,
+    apiBaseUrl:
+      process.env.NODE_ENV === "production" ? process.env.API_URL : "/api/",
   },
+  components: [
+    {
+      path: "~/components",
+      pathPrefix: false,
+    },
+  ],
   modules: [
     "@nuxtjs/tailwindcss",
     "@pinia/nuxt",
@@ -37,18 +50,18 @@ export default defineNuxtConfig({
   },
   vite: {
     plugins: [svgLoader()],
-  },
-  css: ["@/assets/css/main.css", "@/assets/css/animate.css"],
-  i18n: i18n,
-  nitro: {
-    devProxy: {
-      "/api": {
-        target: process.env.API_URL,
-        changeOrigin: true,
-        prependPath: true,
+    server: {
+      proxy: {
+        "/api": {
+          target: process.env.API_URL,
+          rewrite: (path) => path.replace(/^\/api/, ""),
+          changeOrigin: true,
+        },
       },
     },
   },
+  css: ["@/assets/css/main.css", "@/assets/css/animate.css"],
+  i18n: i18n,
   devServer: {
     host: "0.0.0.0",
     port: 3000,

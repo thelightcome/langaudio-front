@@ -3,10 +3,11 @@ import { $fetch, FetchOptions } from "ohmyfetch";
 import repository from "~/repository";
 
 export function useApiHook() {
-  const { $auth, $config } = useNuxtApp();
+  const { $auth } = useNuxtApp();
+  const $config = useRuntimeConfig();
 
   const fetchOptions: FetchOptions = {
-    baseURL: $config.apiBaseUrl,
+    baseURL: $config.public.apiBaseUrl,
     onRequest({ options }) {
       options.headers = {
         ...(options.headers ? options.headers : {}),

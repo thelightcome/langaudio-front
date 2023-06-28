@@ -16,10 +16,14 @@ export const useSourcesStore = defineStore("Sources", {
   },
   actions: {
     async _fetchSources(params?: ISearchSource) {
-      const $api = useApiHook();
-      const response: IListDataRes<ISource> = await $api.source.findAll(params);
-      this.sources = response.rows;
-      this.count = response.count;
+      try {
+        const $api = useApiHook();
+        const response: IListDataRes<ISource> = await $api.source.findAll(
+          params
+        );
+        this.sources = response.rows;
+        this.count = response.count;
+      } catch (err) {}
     },
   },
 });

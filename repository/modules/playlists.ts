@@ -29,11 +29,11 @@ class PlaylistModule extends HttpFactory {
   }
 
   async removeFromPlaylist(data: {
-    plName: string;
+    plId: number;
     sourceId: number;
   }): Promise<any> {
     return await this.POST(`${this.RESOURCE}/remove`, {
-      playlistName: data.plName,
+      playlistId: data.plId,
       sourceId: data.sourceId,
     });
   }

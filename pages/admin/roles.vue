@@ -1,8 +1,8 @@
 <template>
   <div class="pt-4">
-    <UiBackSlash />
+    <UiBackSlash :path="$localePath('/admin')" />
     <div class="relative mb-5">
-      <p class="mb-4 text-dark-font">Form Add Roles</p>
+      <p class="mb-4 text-light">Form Add Roles</p>
       <form class="flex items-start gap-4" @submit.prevent="">
         <UiInputField
           v-if="values.value"
@@ -43,8 +43,8 @@
         :key="role.value"
         class="flex flex-row justify-between items-center"
       >
-        <p class="text-dark-font">{{ role.value }}</p>
-        <p class="text-dark-font">{{ role.description }}</p>
+        <p class="text-light">{{ role.value }}</p>
+        <p class="text-light">{{ role.description }}</p>
         <div class="flex flex-row">
           <UiButton @click="selectCurrent(role)">Select</UiButton>
           <UiButton :disabled="loadingDelete" @click="requestDelete(role.value)"
@@ -63,6 +63,7 @@ import { IRole } from "~/types/roles.types";
 
 const $api = useApiHook();
 const rolesStore = useRolesStore();
+const $localePath = useLocalePath();
 onMounted(async () => {
   await rolesStore._fetchRoles();
 });

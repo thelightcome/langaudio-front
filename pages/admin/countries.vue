@@ -1,8 +1,8 @@
 <template>
   <div class="pt-4">
-    <UiBackSlash />
+    <UiBackSlash :path="$localePath('/admin')" />
     <div class="relative mb-5">
-      <p class="mb-4 text-dark-font">Form Add Countries</p>
+      <p class="mb-4 text-light">Form Add Countries</p>
       <form class="flex items-center" @submit.prevent="">
         <UiInputField
           v-if="values.name"
@@ -32,7 +32,7 @@
         :key="country.name"
         class="flex flex-row justify-between items-center"
       >
-        <p class="text-dark-font">{{ country.name }}</p>
+        <p class="text-light">{{ country.name }}</p>
         <div class="flex flex-row">
           <UiButton @click="selectCurrent(country.name)">Select</UiButton>
           <UiButton
@@ -50,6 +50,7 @@
 import { useCountryStore } from "~/store/countries";
 
 const $api = useApiHook();
+const $localePath = useLocalePath();
 const countryStore = useCountryStore();
 onMounted(async () => {
   await countryStore._fetchCountries();

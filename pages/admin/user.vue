@@ -1,6 +1,6 @@
 <template>
   <div class="pt-4">
-    <UiBackSlash />
+    <UiBackSlash :path="$localePath('/admin')" />
     <div class="flex justify-start items-end flex-wrap gap-6 mb-6">
       <MainSelectRoles
         v-model="values.selectedRole.value"
@@ -26,7 +26,7 @@
         :key="user.id"
         class="flex flex-row justify-between items-center"
       >
-        <p class="text-dark-font">{{ user.email }}</p>
+        <p class="text-light">{{ user.email }}</p>
         <div class="flex flex-row">
           <UiDropDown>
             <template #trigger>
@@ -36,8 +36,8 @@
               <div
                 v-for="role in roles"
                 :key="role.id"
-                class="text-dark-font cursor-pointer"
-                :class="{ '!text-color-1': roleActive(user, role.value) }"
+                class="text-light cursor-pointer"
+                :class="{ '!text-primary': roleActive(user, role.value) }"
                 @click="toggleRole(user.id, role.value)"
               >
                 {{ role.value }}
@@ -63,6 +63,7 @@ import { IUsers } from "~/types/users.types";
 
 const $api = useApiHook();
 const rolesStore = useRolesStore();
+const $localePath = useLocalePath();
 
 const PAGE_SIZE = ref(10);
 const curPage = ref(0);
@@ -86,15 +87,6 @@ const isPaginable = computed(() => {
 
 onMounted(() => request());
 
-function changePage(page: number) {
-  curPage.value = page;
-  request();
-}
-
-function roleActive(user: IUsers, role: string) {
-  return user.roles.some((e) => e.value === role);
-}
-
 const { loading, request } = useRequestHook(async () => {
   const search = {
     email: values.email.value,
@@ -106,6 +98,15 @@ const { loading, request } = useRequestHook(async () => {
   totalCount.value = response.count;
   users.list = response.rows;
 });
+
+function changePage(page: number) {
+  curPage.value = page;
+  request();
+}
+
+function roleActive(user: IUsers, role: string) {
+  return user.roles.some((e) => e.value === role);
+}
 
 function searchRequest() {
   curPage.value = 0;

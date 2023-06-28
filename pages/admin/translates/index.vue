@@ -1,6 +1,6 @@
 <template>
   <div>
-    <UiBackSlash />
+    <UiBackSlash :path="$localePath('/admin')" />
     <div class="flex justify-start items-start gap-6">
       <MainSelectLangs v-model="selectedLang" class="max-w-[250px]" />
       <MainSearchForm class="w-full" :loading="loading" @submit="submit" />
@@ -9,12 +9,18 @@
       <NuxtLink
         v-for="translate in translates.list"
         :key="translate.id"
-        class="flex flex-row justify-between items-center text-dark-font px-2 py-2 cursor-pointer duration-300 hover:text-color-1"
-        :to="localePath('/admin/translates/' + translate.id)"
+        class="flex flex-row justify-between items-center text-light px-2 py-2 cursor-pointer duration-300 hover:text-primary"
+        :to="$localePath('/admin/translates/' + translate.id)"
       >
         <p>
-          {{ translate.source?.name || "Unlnown" }} -
-          {{ translate.source?.implementors[0].name || "Unlnown" }} -
+          {{ translate.source?.name || "Unknown" }} -
+          {{
+            translate.source?.implementors.reduce(
+              (acc: string, e) => (acc += acc.length ? ", " : "" + e.name),
+              ""
+            ) || "Unknown"
+          }}
+          -
           {{ translate.name }}
         </p>
       </NuxtLink>
@@ -33,14 +39,14 @@
 import { ILanguage } from "~/types/languages.types";
 import { ITranslate } from "~/types/translates.types";
 
-const localePath = useLocalePath();
+const $localePath = useLocalePath();
 const $api = useApiHook();
 
 const PAGE_SIZE = ref(10);
 const curPage = ref(0);
 const translateCount = ref(0);
 const impl = ref("");
-const song = ref("");
+const song = ref<number | null>(null);
 const selectedLang = ref<ILanguage | null>(null);
 
 const translates = reactive<{ list: ITranslate[] }>({
@@ -53,9 +59,8 @@ const isPaginable = computed(() => {
 
 const { loading, request } = useRequestHook(async () => {
   const response = await $api.translate.findAll({
-    langCode: selectedLang.value?.code || "",
-    sourceName: song.value,
-    sourceImplementor: impl.value,
+    langId: selectedLang.value?.id,
+    sourceId: song.value,
     offset: curPage.value * PAGE_SIZE.value,
     limit: PAGE_SIZE.value,
     include: ["source"],

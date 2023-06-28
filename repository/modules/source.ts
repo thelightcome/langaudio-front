@@ -1,12 +1,16 @@
 import HttpFactory from "../factory";
 
-import { ISearchSource, IUpdateSource } from "~/types/sources.types";
+import {
+  ISearchSource,
+  ISourceCreate,
+  IUpdateSource,
+} from "~/types/sources.types";
 
 class SourceModule extends HttpFactory {
   private RESOURCE = "/sources";
 
-  async create(formData: FormData): Promise<any> {
-    return await this.POST<any>(`${this.RESOURCE}`, formData);
+  async create(body: ISourceCreate): Promise<any> {
+    return await this.POST<any>(`${this.RESOURCE}`, body);
   }
 
   async update(id: number, body: IUpdateSource): Promise<any> {
@@ -33,12 +37,12 @@ class SourceModule extends HttpFactory {
   }
 
   async findPlaylistSources(
-    plName: string,
+    plId: number,
     params: ISearchSource = { offset: 0, limit: 10 }
   ): Promise<any> {
     return await this.GET(`${this.RESOURCE}/playlist`, {
       query: {
-        name: plName,
+        id: plId,
         ...params,
       },
     });

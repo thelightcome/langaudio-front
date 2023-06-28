@@ -13,9 +13,11 @@ export const useLanguageStore = defineStore("Language", {
   },
   actions: {
     async _fetchLanguages() {
-      const $api = useApiHook();
-      const response = await $api.langs.findAll();
-      this.languages = response;
+      try {
+        const $api = useApiHook();
+        const response = await $api.langs.findAll();
+        this.languages = response;
+      } catch (err) {}
     },
   },
 });

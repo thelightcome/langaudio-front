@@ -6,7 +6,12 @@
         <div class="grow max-w-[450px] mb-10">
           <div class="flex justify-between items-center pr-[10%] mb-4">
             <UiText level="h5"
-              >{{ source.implementors[0].name }} - {{ source.name }}</UiText
+              ><span
+                v-for="(implementor, implementorInd) in source.implementors"
+                :key="implementorInd"
+                >{{ implementor.name }}</span
+              >
+              - {{ source.name }}</UiText
             >
           </div>
           <UiText>
@@ -53,8 +58,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useSourcesStore } from "~/store/sources";
-
+import { IListDataRes } from "~/types/common.types";
 import { ISource } from "~/types/sources.types";
 
 definePageMeta({
@@ -64,14 +68,9 @@ definePageMeta({
 const $api = useApiHook();
 const { t: $tc } = useI18n();
 const route = useRoute();
-const sourcesStore = useSourcesStore();
 const modalStore = useModalStore();
 
-const source: ComputedRef<ISource | undefined> = computed(() => {
-  return sourcesStore.sources.find(
-    (e: { id: number }) => e.id === +route.params.slug
-  );
-});
+const source = ref<ISource | null>(null);
 
 const sourceText: ComputedRef<string> = computed(() => {
   return source.value ? source.value.text.replaceAll("\n", "<br />") : "";
@@ -87,12 +86,24 @@ const { loading, error, request } = useRequestHook(async (data: any) => {
   const res = await $api.translate.create({
     name: data.name.value,
     text: data.text.value,
-    langCode: data.selectedLang.value.code,
+    langId: data.selectedLang.value.id,
     sourceId: +route.params.slug,
   });
   if (res.message) {
     modalStore._openModal("ModalSuccess", $tc(res.message));
   }
   clear();
+});
+
+onMounted(async () => {
+  try {
+    const response: IListDataRes<ISource> = await $api.source.findAll({
+      id: +route.params.slug,
+    });
+    source.value =
+      (response.rows || []).find(
+        (e: { id: number }) => e.id === +route.params.slug
+      ) || null;
+  } catch (err) {}
 });
 </script>

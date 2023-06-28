@@ -1,8 +1,8 @@
 <template>
   <div class="pt-4">
-    <UiBackSlash />
+    <UiBackSlash :path="$localePath('/admin')" />
     <div class="relative mb-5">
-      <p class="mb-4 text-dark-font">Form Add Implementors</p>
+      <p class="mb-4 text-light">Form Add Implementors</p>
       <form class="flex items-center" @submit.prevent="">
         <UiInputField
           v-if="values.name"
@@ -13,7 +13,11 @@
           class="mr-4"
           @blur="check('name')"
         />
-        <MainSelectCountries v-model="values.countryName.value" />
+        <CountriesSelectorMain
+          class="min-w-[200px]"
+          :model-value="values.countries.value"
+          @update:model-value="values.countries.value = $event"
+        />
         <UiButton
           :disabled="loading || !isValid"
           @click="handleSubmit($event, request)"
@@ -32,7 +36,7 @@
         :key="implementor.name"
         class="flex flex-row justify-between items-center"
       >
-        <p class="text-dark-font">{{ implementor.name }}</p>
+        <p class="text-light">{{ implementor.name }}</p>
         <div class="flex flex-row">
           <UiButton @click="selectCurrent(implementor)">Select</UiButton>
           <UiButton
@@ -56,18 +60,22 @@
 <script lang="ts" setup>
 import { useImplementorStore } from "~/store/implementors";
 
+import { ICountry } from "~/types/countries.types";
 import { IImplementor, IImplementorCreate } from "~/types/implementors.types";
 
 const PAGE_SIZE = ref(10);
 
 const $api = useApiHook();
+const $localePath = useLocalePath();
 const implementorStore = useImplementorStore();
 const curPage = ref(0);
 const isVerified = ref<null | boolean>(null);
 const isPaginable = computed(() => {
   return implementorStore._getImplementorsTotal > PAGE_SIZE.value;
 });
+
 onMounted(fetchImplementors);
+
 async function fetchImplementors() {
   await implementorStore._fetchImplementors({
     ...(isVerified.value !== null && { isVerified: isVerified.value }),
@@ -90,13 +98,13 @@ function changePage(page: number) {
 
 const { values, errors, isValid, check, handleSubmit, clear } = useFormHook({
   name: { init: "", required: true, min: 1 },
-  countryName: { init: { name: "" }, required: true },
+  countries: { init: [], required: true, custom: (v) => v.length },
 });
 
 const { loading, error, request } = useRequestHook(async (data: any) => {
   const sendData = {
     name: data.name.value.toLowerCase(),
-    countryName: data.countryName.value.name.toLowerCase(),
+    countries: data.countries.value.map((c: ICountry) => c.name),
   };
   await $api.implementor.create(sendData);
   clear();
@@ -107,7 +115,7 @@ const selectedImplementor = ref<number | null>(null);
 
 function selectCurrent(implementor: IImplementor) {
   values.name.value = implementor.name;
-  values.countryName.value = { name: implementor.countryName };
+  values.countries.value = implementor.countries;
   selectedImplementor.value = implementor.id;
 }
 
@@ -116,7 +124,7 @@ const { loading: loadingUpdate, request: requestUpdate } = useRequestHook(
     if (selectedImplementor.value === null) return;
     const implementor: IImplementorCreate = {
       name: values.name.value.toLowerCase(),
-      countryName: values.countryName.value.name.toLowerCase(),
+      countries: values.countries.value.map((c: ICountry) => c.name),
     };
     await $api.implementor.verify(selectedImplementor.value, implementor);
     selectedImplementor.value = null;

@@ -1,21 +1,28 @@
 <template>
   <div>
-    <UiBackSlash />
+    <UiBackSlash :path="$localePath('/admin')" />
     <div>
       <MainFilterVerifyType v-model="isVerified" />
       <NuxtLink
         v-for="source in sourcesStore._getSources"
         :key="source.id"
-        class="flex flex-row justify-between items-center text-dark-font px-2 py-2 cursor-pointer duration-300 hover:text-color-1"
-        :to="localePath('/admin/sources/' + source.id)"
+        class="flex flex-row justify-between items-center text-light px-2 py-2 cursor-pointer duration-300 hover:text-primary"
+        :to="$localePath('/admin/sources/' + source.id)"
       >
-        <p>{{ source.implementors[0].name }} - {{ source.name }}</p>
+        <p>{{ source.name }}</p>
+        <p>
+          <span
+            v-for="(implementor, implementorInd) in source.implementors"
+            :key="implementorInd"
+            >{{ implementor.name }}</span
+          >
+        </p>
       </NuxtLink>
     </div>
     <div v-if="isPaginable" class="flex justify-center">
       <UiPagination
         :current="curPage"
-        :total="sourcesStore._getSourcesTotal / PAGE_SIZE"
+        :total="parseInt(sourcesStore._getSourcesTotal / PAGE_SIZE)"
         @change="changePage"
       />
     </div>
@@ -25,7 +32,7 @@
 <script lang="ts" setup>
 import { useSourcesStore } from "~/store/sources";
 
-const localePath = useLocalePath();
+const $localePath = useLocalePath();
 
 const PAGE_SIZE = ref(10);
 

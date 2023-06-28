@@ -13,9 +13,11 @@ export const useRolesStore = defineStore("Roles", {
   },
   actions: {
     async _fetchRoles() {
-      const $api = useApiHook();
-      const response = await $api.roles.findAll();
-      this.roles = response;
+      try {
+        const $api = useApiHook();
+        const response = await $api.roles.findAll();
+        this.roles = response;
+      } catch (err) {}
     },
   },
 });

@@ -1,6 +1,6 @@
 <template>
   <div class="pt-10 flex flex-col justify-between items-start gap-4 flex-wrap">
-    <UiBackSlash />
+    <UiBackSlash :path="$localePath('/admin/translates')" />
     <template v-if="translate">
       <UiText v-if="translate.lang" class="mb-4">
         Language - {{ translate.lang.name }}
@@ -9,8 +9,13 @@
         <div class="grow max-w-[450px] mb-10">
           <div class="flex justify-between items-center pr-[10%] mb-4">
             <UiText level="h5"
-              >{{ translate.source.implementors[0].name }} -
-              {{ translate.source.name }}</UiText
+              ><span
+                v-for="(implementor, implementorInd) in translate.source
+                  .implementors"
+                :key="implementorInd"
+                >{{ implementor.name }}</span
+              >
+              - {{ translate.source.name }}</UiText
             >
           </div>
           <UiText>
@@ -43,7 +48,7 @@
 <script lang="ts" setup>
 import { ITranslate } from "~/types/translates.types";
 
-const localePath = useLocalePath();
+const $localePath = useLocalePath();
 const $api = useApiHook();
 const router = useRouter();
 const route = useRoute();
@@ -79,7 +84,7 @@ const {
   if (!translateId.value) return;
   try {
     await $api.translate.delete(translateId.value);
-    router.push(localePath("/admin/translates"));
+    router.push($localePath("/admin/translates"));
   } catch (e: any) {}
 });
 

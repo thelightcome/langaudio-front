@@ -1,4 +1,4 @@
 export interface ITextForTranslate {
-  langCode: string;
+  codeiso: string;
   text: string;
 }

@@ -13,9 +13,11 @@ export const useCountryStore = defineStore("Country", {
   },
   actions: {
     async _fetchCountries() {
-      const $api = useApiHook();
-      const response = await $api.country.findAll();
-      this.countries = response;
+      try {
+        const $api = useApiHook();
+        const response = await $api.country.findAll();
+        this.countries = response;
+      } catch (err) {}
     },
   },
 });

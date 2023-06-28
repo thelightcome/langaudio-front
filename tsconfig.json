@@ -18,8 +18,8 @@
       "@/*": ["./*"],
       "./*": ["./*"]
     },
-    "types": ["vite-plugin-pwa/client", "vite-svg-loader", "@nuxtjs/i18n"],
-    "typeRoots": [".", "./types"]
+    "types": ["vite-plugin-pwa/client", "vite-svg-loader", "@nuxtjs/i18n", "youtube"],
+    "typeRoots": [".", "./types", "node_modules/@types"]
   },
   "exclude": ["node_modules", "dist"],
   "include": [

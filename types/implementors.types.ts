@@ -1,17 +1,21 @@
+import { ICountry } from "./countries.types";
+
 export interface IImplementorCreate {
   name: string;
-  countryName: string;
+  countries: string[];
 }
 
-export interface IImplementor extends IImplementorCreate {
+export interface IImplementor {
   id: number;
+  name: string;
+  countries: ICountry[];
   isVerified: boolean;
   raiting: number;
 }
 
 export interface ISearchImplementor {
   name?: string;
-  countryName?: string;
+  countries?: string[];
   isVerified?: boolean;
   offset?: number;
   limit?: number;

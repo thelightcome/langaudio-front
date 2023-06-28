@@ -20,10 +20,6 @@ class CountryModule extends HttpFactory {
   async findAll(): Promise<any> {
     return await this.GET(`${this.RESOURCE}`);
   }
-
-  async findAllWithImplementors(): Promise<any> {
-    return await this.GET(`${this.RESOURCE}/with-impl`);
-  }
 }
 
 export default CountryModule;
